@@ -30,10 +30,11 @@ const Projects = () => {
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '0 2rem'
+        padding: '0 1rem',
+        width: '100%'
       }}>
         <h2 style={{
-          fontSize: '2.5rem',
+          fontSize: 'clamp(2rem, 4vw, 2.5rem)',
           marginBottom: '2rem',
           color: 'var(--text)'
         }}>
@@ -41,13 +42,13 @@ const Projects = () => {
         </h2>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '2rem'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+          gap: 'clamp(1rem, 3vw, 2rem)'
         }}>
           {projects.map((project, index) => (
             <div key={index} style={{
               background: 'var(--secondary)',
-              padding: '1.5rem',
+              padding: 'clamp(1rem, 3vw, 1.5rem)',
               borderRadius: '8px',
               transition: 'transform 0.2s',
               cursor: 'pointer',
@@ -60,7 +61,7 @@ const Projects = () => {
             >
               <div style={{
                 width: '100%',
-                height: '200px',
+                height: 'clamp(150px, 30vw, 200px)',
                 position: 'relative',
                 borderRadius: '4px',
                 overflow: 'hidden'
@@ -77,14 +78,14 @@ const Projects = () => {
               </div>
               
               <h3 style={{
-                fontSize: '1.5rem',
+                fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
                 color: 'var(--text)'
               }}>
                 {project.title}
               </h3>
               
               <p style={{
-                fontSize: '1rem',
+                fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                 lineHeight: '1.6',
                 color: 'var(--text)',
                 flex: 1
@@ -104,7 +105,7 @@ const Projects = () => {
                     color: 'var(--text)',
                     padding: '0.25rem 0.75rem',
                     borderRadius: '999px',
-                    fontSize: '0.875rem'
+                    fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)'
                   }}>
                     {tech}
                   </span>
@@ -113,7 +114,8 @@ const Projects = () => {
 
               <div style={{
                 display: 'flex',
-                gap: '1rem'
+                gap: '1rem',
+                flexDirection: window.innerWidth <= 400 ? 'column' : 'row'
               }}>
                 <a 
                   href={project.link}
@@ -125,7 +127,7 @@ const Projects = () => {
                     padding: '0.5rem 1rem',
                     borderRadius: '4px',
                     textDecoration: 'none',
-                    fontSize: '0.875rem',
+                    fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
                     textAlign: 'center',
                     flex: 1
                   }}
@@ -143,7 +145,7 @@ const Projects = () => {
                     padding: '0.5rem 1rem',
                     borderRadius: '4px',
                     textDecoration: 'none',
-                    fontSize: '0.875rem',
+                    fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
                     textAlign: 'center',
                     flex: 1
                   }}

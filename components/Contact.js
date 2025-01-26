@@ -29,20 +29,22 @@ const Contact = () => {
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '0 2rem'
+        padding: '0 1rem',
+        width: '100%'
       }}>
         <h2 style={{
-          fontSize: '2.5rem',
+          fontSize: 'clamp(2rem, 4vw, 2.5rem)',
           marginBottom: '2rem',
           color: 'var(--text)'
         }}>
           Get In Touch
         </h2>
         <p style={{
-          fontSize: '1.1rem',
+          fontSize: 'clamp(1rem, 2vw, 1.1rem)',
           lineHeight: '1.8',
           color: 'var(--text)',
-          marginBottom: '2rem'
+          marginBottom: '2rem',
+          maxWidth: '600px'
         }}>
           I'm always open to new opportunities and collaborations. 
           Feel free to reach out!
@@ -51,18 +53,18 @@ const Contact = () => {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '2rem'
+          gap: 'clamp(1.5rem, 4vw, 2rem)'
         }}>
           <a 
             href="mailto:boranarohith07@gmail.com" 
             style={{
               display: 'inline-block',
-              padding: '1rem 2rem',
+              padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)',
               backgroundColor: 'var(--accent)',
               color: 'var(--text)',
               borderRadius: '4px',
               textDecoration: 'none',
-              fontSize: '1.1rem',
+              fontSize: 'clamp(1rem, 2vw, 1.1rem)',
               transition: 'opacity 0.2s',
               width: 'fit-content'
             }}
@@ -74,8 +76,9 @@ const Contact = () => {
 
           <div style={{
             display: 'flex',
-            gap: '1.5rem',
-            alignItems: 'center'
+            gap: 'clamp(0.75rem, 2vw, 1.5rem)',
+            alignItems: 'center',
+            flexWrap: 'wrap'
           }}>
             {socialLinks.map((link, index) => (
               <a
@@ -87,18 +90,20 @@ const Contact = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  padding: '0.75rem 1.5rem',
+                  padding: 'clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 2vw, 1.5rem)',
                   backgroundColor: 'var(--secondary)',
                   color: 'var(--text)',
                   borderRadius: '4px',
                   textDecoration: 'none',
-                  fontSize: '1.1rem',
+                  fontSize: 'clamp(0.875rem, 1.5vw, 1.1rem)',
                   transition: 'transform 0.2s',
+                  flexGrow: window.innerWidth <= 500 ? 1 : 0,
+                  justifyContent: window.innerWidth <= 500 ? 'center' : 'flex-start'
                 }}
                 onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
                 onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
               >
-                <span>{link.icon}</span>
+                <span style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)' }}>{link.icon}</span>
                 {link.name}
               </a>
             ))}

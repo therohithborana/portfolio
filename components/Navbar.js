@@ -31,12 +31,79 @@ const Navbar = () => {
         }}>
           RB
         </Link>
+
+        {/* Mobile Menu Button */}
+        <button 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          style={{
+            display: 'none',
+            background: 'none',
+            border: 'none',
+            color: 'var(--text)',
+            fontSize: '1.5rem',
+            cursor: 'pointer',
+            padding: '0.5rem',
+            '@media (max-width: 768px)': {
+              display: 'block'
+            }
+          }}
+        >
+          {isMenuOpen ? '✕' : '☰'}
+        </button>
         
-        <div style={{ display: 'flex', gap: '2rem' }}>
+        {/* Desktop Menu */}
+        <div style={{ 
+          display: 'flex', 
+          gap: '2rem',
+          '@media (max-width: 768px)': {
+            display: 'none'
+          }
+        }}>
           <Link href="#about" style={{ color: '#fff', textDecoration: 'none' }}>About</Link>
           <Link href="#projects" style={{ color: '#fff', textDecoration: 'none' }}>Projects</Link>
           <Link href="#contact" style={{ color: '#fff', textDecoration: 'none' }}>Contact</Link>
         </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            background: 'rgba(10, 10, 10, 0.95)',
+            backdropFilter: 'blur(10px)',
+            padding: '1rem',
+            display: 'none',
+            flexDirection: 'column',
+            gap: '1rem',
+            '@media (max-width: 768px)': {
+              display: 'flex'
+            }
+          }}>
+            <Link 
+              href="#about" 
+              style={{ color: '#fff', textDecoration: 'none', padding: '0.5rem 1rem' }}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link 
+              href="#projects" 
+              style={{ color: '#fff', textDecoration: 'none', padding: '0.5rem 1rem' }}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Projects
+            </Link>
+            <Link 
+              href="#contact" 
+              style={{ color: '#fff', textDecoration: 'none', padding: '0.5rem 1rem' }}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Contact
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   )
