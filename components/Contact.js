@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 const Contact = () => {
   const [isMobile, setIsMobile] = useState(false)
+  const [hoveredLink, setHoveredLink] = useState(null)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -17,17 +18,20 @@ const Contact = () => {
     {
       name: 'LinkedIn',
       url: 'https://www.linkedin.com/in/rohith-borana-b10778266/',
-      icon: '🔗'
+      icon: '🔗',
+      color: '#0077B5'
     },
     {
       name: 'GitHub',
       url: 'https://github.com/therohithborana',
-      icon: '💻'
+      icon: '💻',
+      color: '#333'
     },
     {
       name: 'Twitter',
       url: 'https://twitter.com/therohithborana',
-      icon: '🐦'
+      icon: '🐦',
+      color: '#1DA1F2'
     }
   ]
 
@@ -36,61 +40,90 @@ const Contact = () => {
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
-      padding: '60px 0'
+      padding: '60px 0',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* Background gradient */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'radial-gradient(circle at 50% 50%, var(--accent) 0%, transparent 50%)',
+        opacity: 0.1,
+        pointerEvents: 'none'
+      }} />
+
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto',
         padding: '0 1rem',
-        width: '100%'
+        width: '100%',
+        position: 'relative',
+        zIndex: 1
       }}>
         <h2 style={{
           fontSize: 'clamp(2rem, 4vw, 2.5rem)',
-          marginBottom: '2rem',
-          color: 'var(--text)'
+          marginBottom: '1rem',
+          color: 'var(--text)',
+          textAlign: 'center'
         }}>
-          Get In Touch
+          Let's Connect!
         </h2>
         <p style={{
           fontSize: 'clamp(1rem, 2vw, 1.1rem)',
           lineHeight: '1.8',
           color: 'var(--text)',
-          marginBottom: '2rem',
-          maxWidth: '600px'
+          marginBottom: '3rem',
+          maxWidth: '600px',
+          margin: '0 auto 3rem',
+          textAlign: 'center',
+          opacity: 0.9
         }}>
-          I'm always open to new opportunities and collaborations. 
-          Feel free to reach out!
+          Whether you want to discuss a project, talk about tech, or just say hi,
+          I'm always excited to connect with fellow developers and creators!
         </p>
         
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 'clamp(1.5rem, 4vw, 2rem)'
+          gap: 'clamp(2rem, 4vw, 3rem)',
+          alignItems: 'center'
         }}>
           <a 
             href="mailto:boranarohith07@gmail.com" 
             style={{
               display: 'inline-block',
-              padding: 'clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem)',
+              padding: 'clamp(0.75rem, 2vw, 1rem) clamp(2rem, 4vw, 3rem)',
               backgroundColor: 'var(--accent)',
               color: 'var(--text)',
-              borderRadius: '4px',
+              borderRadius: '8px',
               textDecoration: 'none',
               fontSize: 'clamp(1rem, 2vw, 1.1rem)',
-              transition: 'opacity 0.2s',
-              width: 'fit-content'
+              transition: 'all 0.3s ease',
+              transform: 'translateY(0)',
+              boxShadow: '0 4px 20px rgba(112, 0, 255, 0.2)'
             }}
-            onMouseOver={(e) => e.target.style.opacity = '0.8'}
-            onMouseOut={(e) => e.target.style.opacity = '1'}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-3px)'
+              e.target.style.boxShadow = '0 8px 30px rgba(112, 0, 255, 0.3)'
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0)'
+              e.target.style.boxShadow = '0 4px 20px rgba(112, 0, 255, 0.2)'
+            }}
           >
-            Send Email
+            ✉️ Send me an email
           </a>
 
           <div style={{
             display: 'flex',
-            gap: 'clamp(0.75rem, 2vw, 1.5rem)',
+            gap: 'clamp(1rem, 2vw, 2rem)',
             alignItems: 'center',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
+            justifyContent: 'center'
           }}>
             {socialLinks.map((link, index) => (
               <a
@@ -98,24 +131,33 @@ const Contact = () => {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onMouseEnter={() => setHoveredLink(index)}
+                onMouseLeave={() => setHoveredLink(null)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: 'clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 2vw, 1.5rem)',
-                  backgroundColor: 'var(--secondary)',
+                  gap: '0.75rem',
+                  padding: 'clamp(0.75rem, 1.5vw, 1rem) clamp(1.5rem, 2vw, 2rem)',
+                  backgroundColor: hoveredLink === index ? link.color : 'var(--secondary)',
                   color: 'var(--text)',
-                  borderRadius: '4px',
+                  borderRadius: '8px',
                   textDecoration: 'none',
-                  fontSize: 'clamp(0.875rem, 1.5vw, 1.1rem)',
-                  transition: 'transform 0.2s',
-                  flexGrow: isMobile ? 1 : 0,
-                  justifyContent: isMobile ? 'center' : 'flex-start'
+                  fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
+                  transition: 'all 0.3s ease',
+                  transform: hoveredLink === index ? 'translateY(-3px)' : 'translateY(0)',
+                  boxShadow: hoveredLink === index 
+                    ? `0 8px 30px ${link.color}33`
+                    : '0 4px 20px rgba(0, 0, 0, 0.2)',
+                  minWidth: isMobile ? '100%' : 'auto',
+                  justifyContent: 'center'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
-                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
               >
-                <span style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)' }}>{link.icon}</span>
+                <span style={{ 
+                  fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
+                  filter: hoveredLink === index ? 'grayscale(0)' : 'grayscale(0.2)'
+                }}>
+                  {link.icon}
+                </span>
                 {link.name}
               </a>
             ))}
