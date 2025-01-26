@@ -44,7 +44,7 @@ const Hero = () => {
           marginBottom: '2rem',
           lineHeight: '1.5'
         }}>
-          Cracked Engineer | Builder | Beatboxer
+          Cracked Engineer in Progress | Builder | Beatboxer
         </p>
       </div>
     </section>
