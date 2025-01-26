@@ -1,6 +1,18 @@
 'use client'
+import { useState, useEffect } from 'react'
 
 const Contact = () => {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 500)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   const socialLinks = [
     {
       name: 'LinkedIn',
@@ -97,8 +109,8 @@ const Contact = () => {
                   textDecoration: 'none',
                   fontSize: 'clamp(0.875rem, 1.5vw, 1.1rem)',
                   transition: 'transform 0.2s',
-                  flexGrow: window.innerWidth <= 500 ? 1 : 0,
-                  justifyContent: window.innerWidth <= 500 ? 'center' : 'flex-start'
+                  flexGrow: isMobile ? 1 : 0,
+                  justifyContent: isMobile ? 'center' : 'flex-start'
                 }}
                 onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
                 onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
