@@ -3,10 +3,10 @@
 const About = () => {
   return (
     <section id="about" style={{
-      minHeight: '100vh',
+      minHeight: '90vh',
       display: 'flex',
       alignItems: 'center',
-      padding: '60px 0',
+      padding: '20px 0',
       position: 'relative',
       overflow: 'hidden'
     }}>
@@ -43,7 +43,7 @@ const About = () => {
           marginBottom: '1.5rem',
           maxWidth: '800px'
         }}>
-          I'm Rohith Borana, a third-year AI & ML engineering student at PES College of Engineering. I create projects that solve real-world problems, often inspired by my own experiences. My interests span psychology and neuroscience-focused ML research, while my creative side shines through music production, playing instruments, and beatboxing. Fun fact: I type at 100 wpm!
+          I'm Rohith Borana, a third-year AI & ML engineering student at PES College of Engineering. I love building projects that solve real-world problems, often inspired by my own experiences. I'm passionate about psychology and neuroscience-focused ML research, and I also enjoy music production, playing instruments, and beatboxing. Fun fact: I type at 100 wpm!
         </p>
       </div>
     </section>

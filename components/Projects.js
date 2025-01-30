@@ -1,9 +1,11 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const Projects = () => {
   const [isMobile, setIsMobile] = useState(false)
   const [hoveredProject, setHoveredProject] = useState(null)
+  const [visibleProjects, setVisibleProjects] = useState(new Set())
+  const projectRefs = useRef([])
 
   useEffect(() => {
     const checkMobile = () => {
@@ -14,11 +16,42 @@ const Projects = () => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  useEffect(() => {
+    if (isMobile) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const projectIndex = projectRefs.current.indexOf(entry.target)
+            if (entry.isIntersecting) {
+              setVisibleProjects(prev => new Set([...prev, projectIndex]))
+            } else {
+              setVisibleProjects(prev => {
+                const newSet = new Set(prev)
+                newSet.delete(projectIndex)
+                return newSet
+              })
+            }
+          })
+        },
+        {
+          threshold: 0.3, // Trigger when 30% of the project is visible
+          rootMargin: '-10% 0px' // Slightly delay the trigger
+        }
+      )
+
+      projectRefs.current.forEach(ref => {
+        if (ref) observer.observe(ref)
+      })
+
+      return () => observer.disconnect()
+    }
+  }, [isMobile])
+
   const projects = [
     {
       title: "RagaChat",
-      description: "A real-time chat application with a musical twist! Connect with fellow music enthusiasts, share your favorite tunes, and discuss everything from classical ragas to modern beats. Built with Next.js and real-time messaging capabilities.",
-      tech: ["Next.js", "JavaScript", "Real-time Chat", "Vercel"],
+      description: "RagaChat is a real-time chat app with a musical twist! Connect with fellow music lovers, share your favorite tunes, and discuss everything from classical ragas to modern beats on public forums. Built with Next.js, it features Clerk authentication and real-time messaging powered by GetStream.io.",
+      tech: ["Next.js", "ClerkAuth", "GetStream.io", "Vercel"],
       link: "https://ragachat.vercel.app",
       github: "https://github.com/therohithborana/RagaChat",
       image: "/ragachat-landing.png"
@@ -87,7 +120,7 @@ const Projects = () => {
           margin: '0 auto 3rem',
           textAlign: 'center'
         }}>
-          Here are some of my recent projects that showcase my skills and passion for building great software.
+         Some recent things i've built :) 
         </p>
         <div style={{
           display: 'grid',
@@ -95,24 +128,27 @@ const Projects = () => {
           gap: 'clamp(1.5rem, 3vw, 2.5rem)'
         }}>
           {projects.map((project, index) => (
-            <div key={index} 
-              onMouseEnter={() => setHoveredProject(index)}
-              onMouseLeave={() => setHoveredProject(null)}
+            <div 
+              key={index}
+              ref={el => projectRefs.current[index] = el}
+              onMouseEnter={() => !isMobile && setHoveredProject(index)}
+              onMouseLeave={() => !isMobile && setHoveredProject(null)}
               style={{
                 background: 'var(--secondary)',
                 padding: 'clamp(1.25rem, 3vw, 1.75rem)',
                 borderRadius: '12px',
-                transition: 'all 0.3s ease',
+                transition: 'all 0.5s ease',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '1.25rem',
-                transform: hoveredProject === index ? 'translateY(-8px)' : 'translateY(0)',
-                boxShadow: hoveredProject === index 
+                transform: (hoveredProject === index || visibleProjects.has(index)) ? 'translateY(-8px)' : 'translateY(0)',
+                boxShadow: (hoveredProject === index || visibleProjects.has(index))
                   ? '0 10px 30px rgba(112, 0, 255, 0.2)'
                   : '0 4px 20px rgba(0, 0, 0, 0.2)',
                 border: '1px solid',
-                borderColor: hoveredProject === index ? 'var(--accent)' : 'transparent'
+                borderColor: (hoveredProject === index || visibleProjects.has(index)) ? 'var(--accent)' : 'transparent',
+                opacity: visibleProjects.has(index) ? 1 : isMobile ? 0.7 : 1
               }}
             >
               <div style={{
@@ -178,7 +214,7 @@ const Projects = () => {
 
               <div style={{
                 display: 'flex',
-                gap: '1rem',
+                gap: isMobile ? '1rem' : '1.5rem',
                 flexDirection: isMobile ? 'column' : 'row'
               }}>
                 <a 
@@ -186,7 +222,7 @@ const Projects = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    background: hoveredProject === index ? 'var(--accent)' : 'var(--secondary)',
+                    background: (hoveredProject === index || visibleProjects.has(index)) ? 'var(--accent)' : 'var(--secondary)',
                     color: 'var(--text)',
                     padding: '0.75rem 1.25rem',
                     borderRadius: '6px',
@@ -195,9 +231,13 @@ const Projects = () => {
                     textAlign: 'center',
                     flex: 1,
                     border: '1px solid',
-                    borderColor: hoveredProject === index ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.3s ease',
-                    fontWeight: '500'
+                    borderColor: (hoveredProject === index || visibleProjects.has(index)) ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
+                    transition: 'all 0.5s ease',
+                    fontWeight: '500',
+                    transform: (hoveredProject === index || visibleProjects.has(index)) ? 'translateY(-2px)' : 'translateY(0)',
+                    boxShadow: (hoveredProject === index || visibleProjects.has(index)) 
+                      ? '0 5px 15px rgba(112, 0, 255, 0.2)'
+                      : 'none'
                   }}
                 >
                   Live Demo
@@ -216,9 +256,10 @@ const Projects = () => {
                     textAlign: 'center',
                     flex: 1,
                     border: '1px solid',
-                    borderColor: hoveredProject === index ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.3s ease',
-                    fontWeight: '500'
+                    borderColor: (hoveredProject === index || visibleProjects.has(index)) ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
+                    transition: 'all 0.5s ease',
+                    fontWeight: '500',
+                    opacity: visibleProjects.has(index) ? 1 : isMobile ? 0.7 : 1
                   }}
                 >
                   View Code

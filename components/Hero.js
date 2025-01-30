@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 const Hero = () => {
   const [displayText, setDisplayText] = useState('')
-  const fullText = "Hi, I'm Rohith Borana"
+  const fullText = "Hi, I'm Rohith Borana!"
 
   useEffect(() => {
     let i = 0
@@ -17,10 +17,11 @@ const Hero = () => {
 
   return (
     <section id="home" style={{
-      height: '100vh',
+      height: '90vh',
       display: 'flex',
       alignItems: 'center',
-      paddingTop: '60px'
+      paddingTop: '60px',
+      paddingBottom: '20px'
     }}>
       <div style={{
         maxWidth: '1200px',
@@ -44,7 +45,7 @@ const Hero = () => {
           marginBottom: '2rem',
           lineHeight: '1.5'
         }}>
-          Cracked Engineer in Progress | Builder | Beatboxer
+          Cracked Engineer in Making | Builder | Beatboxer
         </p>
       </div>
     </section>
