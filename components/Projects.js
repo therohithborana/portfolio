@@ -49,6 +49,14 @@ const Projects = () => {
 
   const projects = [
     {
+      title: "File.Jalebi",
+      description: "Jalebi-Fafda is a peer-to-peer file sharing application that operates without the need for a central server. Leveraging WebRTC technology, it enables users to share files directly between browsers, ensuring efficient and secure transfers.",
+      tech: ["NextJs", "WebRTC", "Peer-to-Peer File sharing"],
+      link: "https://jalebi-fafda.vercel.app/",
+      github: "https://github.com/therohithborana/jalebi_webrtc",
+      image: "/jalebi.png"
+    },
+    {
       title: "RagaChat",
       description: "RagaChat is a real-time chat app with a musical twist! Connect with fellow music lovers, share your favorite tunes, and discuss everything from classical ragas to modern beats on public forums. Built with Next.js, it features Clerk authentication and real-time messaging powered by GetStream.io.",
       tech: ["Next.js", "ClerkAuth", "GetStream.io", "Vercel"],
@@ -63,15 +71,8 @@ const Projects = () => {
       link: "https://bariguru.vercel.app",
       github: "https://github.com/therohithborana/bari-guru",
       image: "/bariguru-landing.png"
-    },
-    {
-      title: "ImageGo",
-      description: "A simple yet powerful image sharing platform. Upload your images and share them using unique 4-character codes. Quick, easy, and hassle-free!",
-      tech: ["JavaScript", "Firebase", "Vercel", "Node.js", "HTML/CSS"],
-      link: "https://less-goo.vercel.app",
-      github: "https://github.com/therohithborana/lessGoo",
-      image: "/imagego-landing.png"
     }
+    
   ]
 
   return (
@@ -120,7 +121,7 @@ const Projects = () => {
           margin: '0 auto 3rem',
           textAlign: 'center'
         }}>
-         Some recent things i've built :) 
+         Some recent things I built :) 
         </p>
         <div style={{
           display: 'grid',
