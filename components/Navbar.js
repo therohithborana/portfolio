@@ -92,8 +92,8 @@ const Navbar = () => {
         }}>
           {!isMobile && (
             <>
-              <Link href="#about" style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem' }}>About</Link>
-              <Link href="#projects" style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem' }}>Projects</Link>
+              <Link href="/#about" style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem' }}>About</Link>
+              <Link href="/projects" style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem' }}>Projects</Link>
             </>
           )}
           <div style={{

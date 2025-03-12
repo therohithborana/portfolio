@@ -1,9 +1,8 @@
 'use client'
 
-import Navbar from '@/components/Navbar.js'
-import Hero from '@/components/Hero.js'
-import About from '@/components/About.js'
-import Projects from '@/components/Projects.js'
+import Navbar from '@/components/Navbar'
+import Hero from '@/components/Hero'
+import About from '@/components/About'
 
 export default function Home() {
   return (
@@ -11,7 +10,6 @@ export default function Home() {
       <Navbar />
       <Hero />
       <About />
-      <Projects />
     </main>
   )
 } 
