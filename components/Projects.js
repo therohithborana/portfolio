@@ -84,6 +84,14 @@ const Projects = () => {
       image: "/ragachat-landing.png"
     },
     {
+      title: "CypherNote",
+      description: "CypherNote is a platform that allows users to take secure and encrypted notes. It ensures privacy by encrypting content, making it accessible only to the user.",
+      tech: ["JavaScript", "Vite JS"],
+      link: "https://cyphernote.vercel.app/",
+      github: "https://github.com/therohithborana/cyphernote",
+      image: "/cyphernote-landing.png"
+    },
+    {
       title: "BariGuru",
       description: "You want to write your college assignment but you are lazy? We got you! Find people from your college who are ready to write assignments for you! And guess what, you can be a writer too.",
       tech: ["JavaScript", "Supabase", "HTML/CSS", "Node.js", "Vercel"],
