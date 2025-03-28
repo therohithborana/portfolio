@@ -5,6 +5,7 @@ import Link from 'next/link'
 const Navbar = () => {
   const [hoveredLink, setHoveredLink] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const socialLinks = [
     {
@@ -16,6 +17,16 @@ const Navbar = () => {
         </svg>
       ),
       color: '#EA4335'
+    },
+    {
+      name: 'YouTube',
+      url: 'https://youtube.com/@therohithborana?si=ymUsrijOIbkPl-O7',
+      icon: (color) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+        </svg>
+      ),
+      color: '#FF0000'
     },
     {
       name: 'LinkedIn',
@@ -94,7 +105,24 @@ const Navbar = () => {
             <>
               <Link href="/#about" style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem' }}>About</Link>
               <Link href="/projects" style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem' }}>Projects</Link>
+              <Link href="/blogs" style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem' }}>Blogs</Link>
             </>
+          )}
+          {isMobile && (
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '5px',
+                marginRight: '10px'
+              }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 12H21M3 6H21M3 18H21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
           )}
           <div style={{
             display: 'flex',
@@ -127,6 +155,47 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobile && mobileMenuOpen && (
+        <div style={{
+          position: 'absolute',
+          top: '100%',
+          left: 0,
+          width: '100%',
+          background: 'rgba(10, 10, 10, 0.95)',
+          backdropFilter: 'blur(10px)',
+          padding: '1rem 0',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          alignItems: 'center',
+          transition: 'all 0.3s ease',
+          zIndex: 999
+        }}>
+          <Link 
+            href="/#about" 
+            style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem', padding: '0.5rem 0' }}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            About
+          </Link>
+          <Link 
+            href="/projects" 
+            style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem', padding: '0.5rem 0' }}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Projects
+          </Link>
+          <Link 
+            href="/blogs" 
+            style={{ color: '#fff', textDecoration: 'none', fontSize: '1rem', padding: '0.5rem 0' }}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Blogs
+          </Link>
+        </div>
+      )}
     </nav>
   )
 }
