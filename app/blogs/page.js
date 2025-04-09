@@ -1,9 +1,31 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
+import BlogsList from '@/components/BlogsList'
 
 export default function BlogsPage() {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  
+  // Blog data
+  const blogs = [
+    {
+      title: "12 Roles You Can Play in a Group Discussion and How to Use Them Right",
+      description: "Group discussions can be challenging to navigate. Learn about 12 distinct roles you can adopt to make the most of these interactions, whether in interviews, team meetings, or academic settings.",
+      date: "Apr 7, 2025",
+      url: "https://medium.com/@boranarohith07/12-roles-you-can-play-in-a-group-discussion-and-how-to-use-them-right-eb1de465e5b8",
+      readTime: "5 min read",
+      platform: "Medium",
+      image: "https://miro.medium.com/v2/resize:fit:750/format:webp/0*rAzD_QNQX1kmpWuR.jpg"
+    }
+    // Add more blogs here as you publish them
+  ]
+
+  useEffect(() => {
+    // Simulate loading state
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1000)
+  }, [])
 
   return (
     <main>
@@ -13,12 +35,11 @@ export default function BlogsPage() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: '7rem 2rem 4rem'
       }}>
         <h1 style={{
           fontSize: 'clamp(2rem, 5vw, 3rem)',
-          marginBottom: '2rem',
+          marginBottom: '1rem',
           textAlign: 'center'
         }}>My Blog</h1>
         
@@ -29,31 +50,35 @@ export default function BlogsPage() {
           marginBottom: '3rem',
           opacity: 0.8
         }}>
-          Coming soon! I'll be sharing my thoughts on technology, programming, and more.
+          Thoughts on technology, communication, and more.
         </p>
 
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '1rem'
-        }}>
+        {isLoading ? (
           <div style={{
-            width: '80px',
-            height: '80px',
-            border: '2px solid var(--accent)',
-            borderRadius: '50%',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            animation: 'pulse 2s infinite'
+            height: '300px'
           }}>
-            <span style={{
-              fontSize: '1.5rem',
-              color: 'var(--accent)'
-            }}>📝</span>
+            <div style={{
+              width: '80px',
+              height: '80px',
+              border: '2px solid var(--accent)',
+              borderRadius: '50%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              animation: 'pulse 2s infinite'
+            }}>
+              <span style={{
+                fontSize: '1.5rem',
+                color: 'var(--accent)'
+              }}>📝</span>
+            </div>
           </div>
-        </div>
+        ) : (
+          <BlogsList blogs={blogs} />
+        )}
 
         <style jsx global>{`
           @keyframes pulse {

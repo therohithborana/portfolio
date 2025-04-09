@@ -15,13 +15,14 @@ const LiveIcon = () => (
 
 const Projects = () => {
   const [isMobile, setIsMobile] = useState(false)
-  const [hoveredProject, setHoveredProject] = useState(null)
   const [visibleProjects, setVisibleProjects] = useState(new Set())
+  const [activeProject, setActiveProject] = useState(null)
   const projectRefs = useRef([])
+  const timelineRef = useRef(null)
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 400)
+      setIsMobile(window.innerWidth <= 768)
     }
     checkMobile()
     window.addEventListener('resize', checkMobile)
@@ -29,35 +30,35 @@ const Projects = () => {
   }, [])
 
   useEffect(() => {
-    if (isMobile) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const projectIndex = projectRefs.current.indexOf(entry.target)
-            if (entry.isIntersecting) {
-              setVisibleProjects(prev => new Set([...prev, projectIndex]))
-            } else {
-              setVisibleProjects(prev => {
-                const newSet = new Set(prev)
-                newSet.delete(projectIndex)
-                return newSet
-              })
-            }
-          })
-        },
-        {
-          threshold: 0.3, // Trigger when 30% of the project is visible
-          rootMargin: '-10% 0px' // Slightly delay the trigger
-        }
-      )
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const projectIndex = projectRefs.current.indexOf(entry.target)
+          if (entry.isIntersecting) {
+            setVisibleProjects(prev => new Set([...prev, projectIndex]))
+            setActiveProject(projectIndex)
+            
+            // Reset active project after animation time
+            setTimeout(() => {
+              if (setActiveProject) {
+                setActiveProject(null)
+              }
+            }, 1000)
+          }
+        })
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '-50px 0px'
+      }
+    )
 
-      projectRefs.current.forEach(ref => {
-        if (ref) observer.observe(ref)
-      })
+    projectRefs.current.forEach(ref => {
+      if (ref) observer.observe(ref)
+    })
 
-      return () => observer.disconnect()
-    }
-  }, [isMobile])
+    return () => observer.disconnect()
+  }, [])
 
   const projects = [
     {
@@ -65,7 +66,8 @@ const Projects = () => {
       description: "A goal-tracking web app that helps you build consistency with daily progress tracking, heatmap visualizations, and detailed statistics. Stay motivated and achieve your goals!",
       tech: ["Next.js", "React", "Tailwind CSS", "MongoDB", "Clerk"],
       link: "https://onestep-azure.vercel.app/",
-      github: "https://github.com/therohithborana/onestep"
+      github: "https://github.com/therohithborana/onestep",
+      year: "2025"
     },
     {
       title: "File.Jalebi",
@@ -73,7 +75,8 @@ const Projects = () => {
       tech: ["NextJs", "WebRTC", "Peer-to-Peer File sharing"],
       link: "https://jalebi-fafda.vercel.app/",
       github: "https://github.com/therohithborana/jalebi_webrtc",
-      image: "/jalebi.png"
+      image: "/jalebi.png",
+      year: "2025"
     },
     {
       title: "RagaChat",
@@ -81,7 +84,8 @@ const Projects = () => {
       tech: ["Next.js", "ClerkAuth", "GetStream.io", "Vercel"],
       link: "https://ragachat.vercel.app",
       github: "https://github.com/therohithborana/RagaChat",
-      image: "/ragachat-landing.png"
+      image: "/ragachat-landing.png",
+      year: "2025"
     },
     {
       title: "CypherNote",
@@ -89,7 +93,8 @@ const Projects = () => {
       tech: ["JavaScript", "Vite JS"],
       link: "https://cyphernote.vercel.app/",
       github: "https://github.com/therohithborana/cyphernote",
-      image: "/cyphernote-landing.png"
+      image: "/cyphernote-landing.png",
+      year: "2025"
     },
     {
       title: "BariGuru",
@@ -97,9 +102,9 @@ const Projects = () => {
       tech: ["JavaScript", "Supabase", "HTML/CSS", "Node.js", "Vercel"],
       link: "https://bariguru.vercel.app",
       github: "https://github.com/therohithborana/bari-guru",
-      image: "/bariguru-landing.png"
+      image: "/bariguru-landing.png",
+      year: "2025"
     }
-    
   ]
 
   return (
@@ -148,142 +153,268 @@ const Projects = () => {
           margin: '0 auto 3rem',
           textAlign: 'center'
         }}>
-         Some recent things I built :) 
+         Some recent things I built, arranged in a timeline
         </p>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
-          gap: 'clamp(1.5rem, 3vw, 2.5rem)'
-        }}>
+
+        {/* Timeline container */}
+        <div 
+          ref={timelineRef}
+          style={{
+            position: 'relative',
+            maxWidth: '1000px',
+            margin: '0 auto',
+            padding: '1rem 0 2rem'
+          }}
+        >
+          {/* Timeline line */}
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: isMobile ? '20px' : '50%',
+            width: '4px',
+            backgroundColor: 'rgba(112, 0, 255, 0.2)',
+            transform: isMobile ? 'none' : 'translateX(-2px)'
+          }} />
+
           {projects.map((project, index) => (
             <div 
               key={index}
               ref={el => projectRefs.current[index] = el}
-              onMouseEnter={() => !isMobile && setHoveredProject(index)}
-              onMouseLeave={() => !isMobile && setHoveredProject(null)}
               style={{
-                background: 'var(--secondary)',
-                padding: 'clamp(1.25rem, 3vw, 1.75rem)',
-                borderRadius: '12px',
-                transition: 'all 0.5s ease',
-                cursor: 'pointer',
                 display: 'flex',
-                flexDirection: 'column',
-                gap: '1.25rem',
-                transform: (hoveredProject === index || visibleProjects.has(index)) ? 'translateY(-8px)' : 'translateY(0)',
-                boxShadow: (hoveredProject === index || visibleProjects.has(index))
-                  ? '0 10px 30px rgba(112, 0, 255, 0.2)'
-                  : '0 4px 20px rgba(0, 0, 0, 0.2)',
-                border: '1px solid',
-                borderColor: (hoveredProject === index || visibleProjects.has(index)) ? 'var(--accent)' : 'transparent',
-                opacity: visibleProjects.has(index) ? 1 : isMobile ? 0.7 : 1
+                position: 'relative',
+                margin: '3rem 0',
+                opacity: visibleProjects.has(index) ? 1 : 0,
+                transform: visibleProjects.has(index) 
+                  ? 'translateY(0)' 
+                  : `translateY(${index % 2 === 0 || isMobile ? '50px' : '-50px'})`,
+                transition: 'all 0.8s ease',
+                flexDirection: isMobile ? 'row' : (index % 2 === 0 ? 'row' : 'row-reverse'),
+                justifyContent: 'flex-start',
+                width: '100%'
               }}
             >
-              <h3 style={{
-                fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
-                color: hoveredProject === index ? 'var(--accent)' : 'var(--text)',
-                transition: 'color 0.3s ease'
-              }}>
-                {project.title}
-              </h3>
-              
-              <p style={{
-                fontSize: 'clamp(0.875rem, 2vw, 1rem)',
-                lineHeight: '1.6',
-                color: 'var(--text)',
-                opacity: 0.9,
-                flex: 1
-              }}>
-                {project.description}
-              </p>
-
+              {/* Year indicator */}
               <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.5rem',
-                marginBottom: '0.5rem'
+                position: 'absolute',
+                left: isMobile ? '20px' : '50%',
+                top: 0,
+                transform: isMobile ? 'translateX(-50%)' : 'translateX(-50%) translateY(-150%)',
+                backgroundColor: 'var(--accent)',
+                color: 'white',
+                padding: '0.5rem 1rem',
+                borderRadius: '20px',
+                fontSize: '0.9rem',
+                fontWeight: 'bold',
+                zIndex: 5,
+                display: index === 0 || projects[index-1].year !== project.year ? 'block' : 'none'
               }}>
-                {project.tech.map((tech, techIndex) => (
-                  <span key={techIndex} style={{
-                    background: hoveredProject === index ? 'var(--accent)' : 'var(--secondary)',
-                    color: 'var(--text)',
-                    padding: '0.25rem 0.75rem',
-                    borderRadius: '999px',
-                    fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
-                    border: '1px solid',
-                    borderColor: hoveredProject === index ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.3s ease'
-                  }}>
-                    {tech}
-                  </span>
-                ))}
+                {project.year}
               </div>
 
+              {/* Timeline dot */}
               <div style={{
-                display: 'flex',
-                gap: isMobile ? '1rem' : '1.5rem',
-                flexDirection: isMobile ? 'column' : 'row'
+                position: 'absolute',
+                left: isMobile ? '20px' : '50%',
+                top: isMobile ? '0' : '50%',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: 'var(--secondary)',
+                border: '4px solid var(--background)',
+                transform: isMobile ? 'translateX(-50%)' : 'translate(-50%, -50%)',
+                zIndex: 2,
+                transition: 'all 0.5s ease',
+                boxShadow: activeProject === index ? '0 0 15px rgba(112, 0, 255, 0.8)' : 'none',
+                overflow: 'hidden'
               }}>
-                <a 
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    background: (hoveredProject === index || visibleProjects.has(index)) ? 'var(--accent)' : 'var(--secondary)',
-                    color: 'var(--text)',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: '6px',
-                    textDecoration: 'none',
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'var(--accent)',
+                  opacity: visibleProjects.has(index) ? 1 : 0,
+                  transition: 'opacity 0.5s ease, transform 0.5s ease',
+                  transform: visibleProjects.has(index) ? 'scale(1)' : 'scale(0)',
+                  borderRadius: '50%'
+                }} />
+              </div>
+
+              {/* Content */}
+              <div style={{
+                width: isMobile ? 'calc(100% - 50px)' : '45%',
+                marginLeft: isMobile ? '40px' : (index % 2 === 0 ? '0' : 'auto'),
+                marginRight: isMobile ? '0' : (index % 2 === 0 ? 'auto' : '0'),
+                position: 'relative'
+              }}>
+                <div style={{
+                  backgroundColor: 'var(--secondary)',
+                  borderRadius: '12px',
+                  padding: '1.5rem',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                  border: '1px solid transparent',
+                  transition: 'all 0.5s ease',
+                  transform: visibleProjects.has(index) ? 'translateY(0)' : 
+                    (index % 2 === 0 || isMobile ? 'translateY(30px)' : 'translateY(-30px)'),
+                  opacity: visibleProjects.has(index) ? 1 : 0,
+                  boxShadow: activeProject === index ? '0 10px 30px rgba(112, 0, 255, 0.2)' : '0 4px 20px rgba(0, 0, 0, 0.2)',
+                  borderColor: activeProject === index ? 'var(--accent)' : 'transparent'
+                }}>
+                  <h3 style={{
+                    fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
+                    color: activeProject === index ? 'var(--accent)' : 'var(--text)',
+                    marginBottom: '1rem',
+                    transition: 'color 0.3s ease'
+                  }}>
+                    {project.title}
+                  </h3>
+                  
+                  <p style={{
                     fontSize: 'clamp(0.875rem, 2vw, 1rem)',
-                    textAlign: 'center',
-                    flex: 1,
-                    border: '1px solid',
-                    borderColor: (hoveredProject === index || visibleProjects.has(index)) ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.5s ease',
-                    fontWeight: '500',
-                    transform: (hoveredProject === index || visibleProjects.has(index)) ? 'translateY(-2px)' : 'translateY(0)',
-                    boxShadow: (hoveredProject === index || visibleProjects.has(index)) 
-                      ? '0 5px 15px rgba(112, 0, 255, 0.2)'
-                      : 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.5rem'
-                  }}
-                >
-                  <LiveIcon />
-                  Live
-                </a>
-                <a 
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    background: 'transparent',
+                    lineHeight: '1.6',
                     color: 'var(--text)',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: '6px',
-                    textDecoration: 'none',
-                    fontSize: 'clamp(0.875rem, 2vw, 1rem)',
-                    textAlign: 'center',
-                    flex: 1,
-                    border: '1px solid',
-                    borderColor: (hoveredProject === index || visibleProjects.has(index)) ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.5s ease',
-                    fontWeight: '500',
-                    opacity: visibleProjects.has(index) ? 1 : isMobile ? 0.7 : 1,
+                    opacity: 0.9,
+                    marginBottom: '1.5rem'
+                  }}>
+                    {project.description}
+                  </p>
+
+                  <div style={{
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.5rem'
-                  }}
-                >
-                  <GitHubIcon />
-                  Code
-                </a>
+                    flexWrap: 'wrap',
+                    gap: '0.5rem',
+                    marginBottom: '1.5rem'
+                  }}>
+                    {project.tech.map((tech, techIndex) => (
+                      <span key={techIndex} style={{
+                        background: activeProject === index ? 'var(--accent)' : 'var(--secondary)',
+                        color: 'var(--text)',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '999px',
+                        fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+                        border: '1px solid',
+                        borderColor: activeProject === index ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
+                        transition: 'all 0.3s ease'
+                      }}>
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    gap: isMobile ? '1rem' : '1.5rem',
+                    flexDirection: isMobile ? 'column' : 'row'
+                  }}>
+                    <a 
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        background: activeProject === index ? 'var(--accent)' : 'var(--secondary)',
+                        color: 'var(--text)',
+                        padding: '0.75rem 1.25rem',
+                        borderRadius: '6px',
+                        textDecoration: 'none',
+                        fontSize: 'clamp(0.875rem, 2vw, 1rem)',
+                        textAlign: 'center',
+                        flex: 1,
+                        border: '1px solid',
+                        borderColor: activeProject === index ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
+                        transition: 'all 0.5s ease',
+                        fontWeight: '500',
+                        transform: activeProject === index ? 'translateY(-2px)' : 'translateY(0)',
+                        boxShadow: activeProject === index ? '0 5px 15px rgba(112, 0, 255, 0.2)' : 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      <LiveIcon />
+                      Live
+                    </a>
+                    <a 
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        background: 'transparent',
+                        color: 'var(--text)',
+                        padding: '0.75rem 1.25rem',
+                        borderRadius: '6px',
+                        textDecoration: 'none',
+                        fontSize: 'clamp(0.875rem, 2vw, 1rem)',
+                        textAlign: 'center',
+                        flex: 1,
+                        border: '1px solid',
+                        borderColor: activeProject === index ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
+                        transition: 'all 0.5s ease',
+                        fontWeight: '500',
+                        opacity: visibleProjects.has(index) ? 1 : isMobile ? 0.7 : 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      <GitHubIcon />
+                      Code
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
+
+          {/* More Projects Button */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '4rem',
+            position: 'relative',
+            zIndex: 2
+          }}>
+            <a 
+              href="https://github.com/therohithborana"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                background: 'var(--secondary)',
+                color: 'var(--text)',
+                padding: '1rem 2rem',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                fontSize: 'clamp(1rem, 2vw, 1.1rem)',
+                fontWeight: '600',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = '0 10px 25px rgba(112, 0, 255, 0.3)';
+                e.currentTarget.style.background = 'var(--accent)';
+                e.currentTarget.style.color = '#fff';
+                e.currentTarget.style.borderColor = 'var(--accent)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.background = 'var(--secondary)';
+                e.currentTarget.style.color = 'var(--text)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+              }}
+            >
+              <GitHubIcon />
+              More Projects on GitHub
+            </a>
+          </div>
         </div>
       </div>
     </section>
