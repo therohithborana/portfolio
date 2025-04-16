@@ -5,6 +5,7 @@ import Link from 'next/link'
 const Hero = () => {
   const [displayText, setDisplayText] = useState('')
   const fullText = "Hi, I'm Rohith Borana!"
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     let i = 0
@@ -14,6 +15,15 @@ const Hero = () => {
       if (i > fullText.length) clearInterval(typing)
     }, 100)
     return () => clearInterval(typing)
+  }, [])
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
   return (
@@ -52,11 +62,13 @@ const Hero = () => {
           Cracked Engineer in Making | Builder | Beatboxer
         </p>
 
-        {/* Add mobile navigation */}
+        {/* Mobile navigation with flexible layout */}
         <div style={{
           display: 'flex',
-          gap: '1.5rem',
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? '1rem' : '1.5rem',
           justifyContent: 'center',
+          alignItems: 'center',
           marginTop: '2rem',
           fontFamily: 'var(--font-jetbrains)',
           fontSize: '1.1rem'
@@ -77,10 +89,18 @@ const Hero = () => {
           }}>
             View Projects
           </Link>
+          <Link href="/blogs" style={{
+            color: 'var(--text)',
+            textDecoration: 'none',
+            borderBottom: '1px solid var(--accent)',
+            paddingBottom: '0.25rem'
+          }}>
+            Read my Blogs
+          </Link>
         </div>
       </div>
     </section>
   )
 }
 
-export default Hero 
+export default Hero
